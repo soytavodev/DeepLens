@@ -1,0 +1,9 @@
+# Entornos virtuales y caché
+venv/
+__pycache__/
+
+# Archivos temporales de la aplicación
+temp_mockup.html
+
+# Capturas de prueba (opcional, quítalo si quieres subir las fotos)
+*.png
