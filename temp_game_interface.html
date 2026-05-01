@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugando - Trivia Game</title>
+    <style>
+        :root { --primary: #3498db; --secondary: #2c3e50; --success: #2ecc71; --error: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; display: flex; justify-content: center; }
+        .game-container { width: 100%; max-width: 600px; background: white; min-height: 100vh; padding-bottom: 50px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .game-header { display: flex; justify-content: space-between; padding: 15px 20px; background: var(--secondary); color: white; font-weight: bold; }
+        .progress-bar { height: 10px; background: #eee; width: 100%; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s ease; }
+        .question-card { padding: 40px 20px; text-align: center; }
+        .question-card h2 { font-size: 1.5rem; color: var(--text); margin-bottom: 30px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-btn { padding: 15px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+        .option-btn:hover { background-color: #f9f9f9; border-color: var(--primary); }
+        .badge { padding: 5px 10px; border-radius: 12px; font-size: 0.8rem; }
+        .score-badge { background: var(--success); }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Encabezado del juego -->
+        <div class="game-header">
+            <span class="badge">Pregunta 1 / 10</span>
+            <span class="badge score-badge">Puntos: 0</span>
+        </div>
+
+        <!-- Barra de progreso (Simulada al 0% inicial) -->
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+
+        <!-- Área de la pregunta -->
+        <div class="question-card">
+            <h2>Cuáles de los siguientes planetas tiene más anillos?</h2>
+            
+            <!-- Formulario simulado para opciones (Lógica del bucle foreach) -->
+            <form action="#" method="POST">
+                <div class="options-grid">
+                    <button type="button" class="option-btn">Júpiter</button>
+                    <button type="button" class="option-btn">Saturno</button>
+                    <button type="button" class="option-btn">Urano</button>
+                    <button type="button" class="option-btn">Marte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido - Trivia Game</title>
+    <style>
+        :root { --primary: #3498db; --secondary: #2c3e50; --text: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .hero { text-align: center; padding: 60px 20px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { font-size: 3rem; margin-bottom: 20px; color: var(--secondary); }
+        p { font-size: 1.2rem; margin-bottom: 40px; color: #666; }
+        .cta-buttons { margin-top: 20px; }
+        .btn-main { font-size: 1.2rem; padding: 12px 24px; background-color: var(--primary); color: white; text-decoration: none; border-radius: 5px; display: inline-block; }
+        .link-text { color: var(--primary); font-weight: bold; text-decoration: none; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <h1>Pon a prueba tu cerebro 🧠</h1>
+            <p>Demuestra cuánto sabes de cultura general. Compite contigo mismo y mejora tus estadísticas.</p>
+            
+            <!-- Estado: Usuario no logueado (Lógica del else block) -->
+            <div class="cta-buttons">
+                <a href="#" class="btn-main">Crear Cuenta</a>
+                <a href="#" class="link-text">Ya tengo cuenta</a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
