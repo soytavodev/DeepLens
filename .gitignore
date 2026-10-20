@@ -7,3 +7,13 @@ temp_mockup.html
 
 # Capturas de prueba (opcional, quítalo si quieres subir las fotos)
 *.png
+
+# Resultados y depuración de DeepLens
+salida/
+error_*.txt
+temp_*.html
+
+# Entorno
+venv/
+.env
+!ejemplos/*.png

@@ -5,26 +5,40 @@ import json
 import argparse
 from playwright.sync_api import sync_playwright
 
-# --- CONFIGURACIÓN IA LOCAL ---
-AI_URL = "https://covalently-untasked-daphne.ngrok-free.dev/api/"
-AI_USER = "jocarsa"
-AI_PASS = "jocarsa"
-AI_MODEL = "qwen3.5:latest"
+# --- CONFIGURACIÓN IA LOCAL (Ollama) ---
+# Se puede cambiar con variables de entorno o con un archivo .env (opcional)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
+AI_MODEL = os.getenv("MODELO", "qwen2.5:1.5b")
+
+# Archivos que nunca se envían a la IA porque suelen contener contraseñas
+ARCHIVOS_SECRETOS = {'db.php', 'database.php', 'config.php', '.env', 'settings.py'}
 
 # Inyección de framework CSS Classless (hace que cualquier HTML bruto se vea moderno)
-CSS_INJECTION = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">'
+CSS_INJECTION = (
+    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">'
+    # Centra el contenido para que la captura no ocupe todo el ancho de la pantalla
+    '<style>body{max-width:760px;margin:40px auto;padding:0 24px}</style>'
+)
 
 def leer_codigo_proyecto(ruta_carpeta):
     """Filtra basura y extrae contexto relevante del código."""
     contenido = ""
-    archivos_clave = ['index.php', 'main.py', 'README.md', 'header.php', 'menu.php', 'app.js', 'db.php']
+    archivos_clave = ['index.php', 'main.py', 'README.md', 'header.php', 'menu.php', 'app.js']
     
     for root, dirs, files in os.walk(ruta_carpeta):
         # Filtro inteligente de ruido: ignoramos carpetas pesadas/basura
-        if any(ignorar in root for ignorar in ['node_modules', 'vendor', '.git', '__pycache__', 'img', 'video', 'assets']):
+        if any(ignorar in root for ignorar in ['node_modules', 'vendor', '.git', '__pycache__', 'img', 'video', 'assets', 'config']):
             continue
             
         for file in files:
+            if file in ARCHIVOS_SECRETOS or file.endswith('.example'):
+                continue
             if file in archivos_clave or file.endswith('.php') or file.endswith('.html'):
                 ruta_archivo = os.path.join(root, file)
                 try:
@@ -71,21 +85,21 @@ DEVUELVE ÚNICAMENTE EL JSON A PARTIR DE AQUÍ:
     "pantallas": [
 """
     
+    # API estándar de Ollama: https://github.com/ollama/ollama/blob/main/docs/api.md
     payload = {
-        "user": AI_USER,
-        "password": AI_PASS,
-        "action": "generate",
         "model": AI_MODEL,
         "system": system_prompt,
-        "question": prompt
+        "prompt": prompt,
+        "stream": False,
+        "options": {"num_ctx": 8192, "temperature": 0.2},
     }
-    
+
+    respuesta_cruda = ""
     try:
-        res = requests.post(AI_URL, json=payload, timeout=240)
+        print(f"🤖 Consultando a {AI_MODEL} en {OLLAMA_URL} (sin tarjeta gráfica puede tardar varios minutos)...")
+        res = requests.post(f"{OLLAMA_URL}/api/generate", json=payload, timeout=900)
         res.raise_for_status()
-        
-        datos = res.json() if "application/json" in res.headers.get("Content-Type", "") else res.text
-        respuesta_cruda = datos["answer"] if isinstance(datos, dict) and "answer" in datos else res.text
+        respuesta_cruda = res.json().get("response", "")
         
         # --- LIMPIEZA EXTREMA DEL STRING ---
         respuesta_limpia = respuesta_cruda.strip()
@@ -216,7 +230,7 @@ def tomar_capturas(ruta_carpeta, out_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DEEPLENS PRO - Auditoría Visual y Mockups Inteligentes")
     parser.add_argument("--path", required=True, help="Ruta absoluta o relativa del proyecto a analizar")
-    parser.add_argument("--out", default=".", help="Directorio de salida para imágenes y reporte Markdown")
+    parser.add_argument("--out", default="salida", help="Directorio de salida para imágenes y reporte Markdown")
     
     args = parser.parse_args()
     

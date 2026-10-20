@@ -1,0 +1,4 @@
+requests>=2.31
+playwright>=1.55
+# opcional, para leer el archivo .env
+python-dotenv>=1.0
